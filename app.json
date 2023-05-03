@@ -24,6 +24,14 @@
         "backgroundColor": "#ffffff"
       }
     },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ],
     "web": {
       "bundler": "metro",
       "favicon": "./assets/images/favicon.png"

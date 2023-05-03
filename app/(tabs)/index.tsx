@@ -2,9 +2,9 @@ import { useIsFocused } from '@react-navigation/native';
 import { Camera, CameraCapturedPicture } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import CameraPreview from '../../components/CameraPreview';
-import CameraWrapper from '../../components/CameraWrapper';
-import { Text, View } from '../../components/Themed';
+import CameraPreview from '../../components/camera/CameraPreview';
+import CameraWrapper from '../../components/camera/CameraWrapper';
+import { Text, View } from '../../components/default-components/Themed';
 
 export default function TabOneScreen() {
   const [permission, setPermission] = Camera.useCameraPermissions()
@@ -26,8 +26,8 @@ export default function TabOneScreen() {
   }
 
   function __retakePicture(): void {
-    setCapturedImage(undefined)
     setPreviewVisible(false)
+    setCapturedImage(undefined)
   }
 
   async function __takePicture() {
@@ -42,7 +42,7 @@ export default function TabOneScreen() {
   if (permission) {
     if (previewVisible && capturedImage) {
       return (
-        <CameraPreview photo={capturedImage} __retakePicture={__retakePicture} __sendPhoto={() => { }} />
+        <CameraPreview photo={capturedImage} __retakePicture={__retakePicture}/>
       )
     } else if (focused) {
       return (

@@ -1,14 +1,24 @@
 import { CameraCapturedPicture } from "expo-camera";
 import React from "react";
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { postPicture } from "../../services/image-service";
 
 type CameraPreviewProps = {
     photo: CameraCapturedPicture | undefined,
-    __retakePicture: () => void,
-    __sendPhoto: () => void
+    __retakePicture: () => void
 }
 
 export default function CameraPreview(props: CameraPreviewProps) {
+
+  async function sendPhoto() {
+    if (!props.photo) return
+    postPicture(props.photo).then((response) => {
+      console.log(response.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
   return (
       <View style={cameraPreviewStyles.container}>
       <ImageBackground source={{
@@ -21,7 +31,7 @@ export default function CameraPreview(props: CameraPreviewProps) {
               <Text style={cameraPreviewStyles.retakeText}>Re-take</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={props.__sendPhoto} style={cameraPreviewStyles.sendPhotoButton}>
+              <TouchableOpacity onPress={sendPhoto} style={cameraPreviewStyles.sendPhotoButton}>
               <Text style={cameraPreviewStyles.sendPhotoText}>Send photo</Text>
               </TouchableOpacity>
           </View>

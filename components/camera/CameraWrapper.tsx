@@ -8,6 +8,8 @@ type CameraWrapperProps = {
     __takePicture: () => void
 }
 
+
+
 export default function CameraPreview (props: CameraWrapperProps) {
   return (
     <Camera

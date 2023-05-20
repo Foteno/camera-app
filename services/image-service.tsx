@@ -4,7 +4,16 @@ import { getImageDot } from './dot-service';
 
 export const djangoUrl = "http://192.168.0.196:8000/api"
 
+export enum InpaintingAlgorithm {
+    LAMA = 'lama',
+    GAN = 'gan',
+    TELEA = 'telea',
+    NS = 'ns',
+}
+
 let image: CameraCapturedPicture;
+let masks: [string];
+let inpaintingAlgorithm: InpaintingAlgorithm = InpaintingAlgorithm.TELEA;
 
 export const setImage = (picture: CameraCapturedPicture) => {
     image = picture;
@@ -12,24 +21,20 @@ export const setImage = (picture: CameraCapturedPicture) => {
 export const getImage = () => {
   return image;
 };
-
-let masks: [string];
-
 export const setMasks = (_masks: [string]) => {
     masks = _masks;
 };
 export const getMasks = () => {
   return masks;
 };
+export const setInpaintingAlgorithm = (_inpainting: InpaintingAlgorithm) => {
+    inpaintingAlgorithm = _inpainting;
+};
+export const getInpaintingAlgorithm = () => {
+  return inpaintingAlgorithm;
+};
 
-export enum InpaintingAlgorithm {
-    SAM = 'sam',
-    GAN = 'gan',
-    TELEA = 'telea',
-    NS = 'ns',
-}
-
-async function postPicture(picture: CameraCapturedPicture): Promise<AxiosResponse<any, any>> {
+async function postPicture(picture: CameraCapturedPicture, inpaintingAlgorithm: InpaintingAlgorithm): Promise<AxiosResponse<any, any>> {
     if (!picture.uri) return Promise.reject('No picture uri');
 
     let data = new FormData();
@@ -50,10 +55,12 @@ async function postPicture(picture: CameraCapturedPicture): Promise<AxiosRespons
         }, 
         params: {
             'coord_x': dot.x,
-            'coord_y': dot.y
+            'coord_y': dot.y,
+            'algorithm': inpaintingAlgorithm,
         }
     };
     return axios.post(djangoUrl + '/post-point-sam', data, config);
 }
 
 export { postPicture };
+

@@ -1,15 +1,10 @@
-import { StyleSheet } from 'react-native';
-
-import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-import { Image, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Text, View } from '../components/default-components/Themed';
+import { setChosenMask } from '../services/dot-service';
 import { djangoUrl, getMasks } from '../services/image-service';
-import { useEffect } from 'react';
-
-import { NavigationProp } from '@react-navigation/native';
-import { getChosenMask, setChosenMask } from '../services/dot-service';
 
 const imageUrl = "/get-mask?mask_file="
 

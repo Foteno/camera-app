@@ -5,9 +5,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import CameraWrapper from '../../components/camera/CameraWrapper';
 import PicturePreview from '../../components/camera/PicturePreview';
 import { Text, View } from '../../components/default-components/Themed';
-import { setImageDot } from '../../services/dot-service';
 import { setImage } from '../../services/image-service';
-import { Dot } from '../../components/camera/PointChooser';
 
 export default function TabOneScreen() {
   const [permission, requestPermission] = Camera.useCameraPermissions()

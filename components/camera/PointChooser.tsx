@@ -5,18 +5,25 @@ import ImageZoom, { IOnClick } from 'react-native-image-pan-zoom';
 import { View } from "../../components/default-components/Themed";
 import { setImageDot } from "../../services/dot-service";
 
+const ratio = 5
+let antiCaching: Date;
 
 type PointChooserProps = {
     photo: CameraCapturedPicture | undefined,
-    
-}
+};
 
 export type Dot = {
 	x: number,
 	y: number
-}
+};
 
-const ratio = 5
+export const setAntiCaching = (date: Date) => {
+	antiCaching = date;
+};
+
+export const getAntiCaching = () => {
+	return antiCaching;
+};
 
 export default function PointChooser(props: PointChooserProps) {
 	const [dot, setDot] = useState<Dot>()
@@ -49,6 +56,8 @@ export default function PointChooser(props: PointChooserProps) {
 		_dot.x = _dot.x * smallerRatio
 		_dot.y = _dot.y * smallerRatio
 		setImageDot(_dot)
+
+		antiCaching = new Date();
 	};
 
 	return (

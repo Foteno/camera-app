@@ -1,98 +1,52 @@
+import { Picker } from '@react-native-picker/picker';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-
-import { useWindowDimensions } from 'react-native';
-import Swiper from 'react-native-swiper';
-
 import { Text, View } from '../../components/default-components/Themed';
+import { InpaintingAlgorithm, setInpaintingAlgorithm } from '../../services/image-service';
+
 
 
 export default function ModalScreen() {
-	// const [selectedInpainting, setSelectedInpainting] = useState();
-	const window = useWindowDimensions()
+	const [selectedValue, setSelectedValue] = useState<InpaintingAlgorithm>(InpaintingAlgorithm.TELEA);
 
+	useEffect(() => {
+		setSelectedValue(InpaintingAlgorithm.TELEA);
+	}, []);
+
+	const setPickerValue = (itemValue: InpaintingAlgorithm, itemIndex: number) => {
+		setSelectedValue(itemValue)
+		setInpaintingAlgorithm(itemValue);
+	}
 
 	return (
-		<Swiper style={styles.wrapper} showsButtons={true}>
-			<View style={styles.slide1}>
-				{/* <Image style={styles.image} source={}></Image> */}
-			</View>
-			<View style={styles.slide2}>
-				<Text style={styles.text}>We want you to have a great experience</Text>
-			</View>
-			<View style={styles.slide3}>
-				<Text style={styles.text}>That is why we created this elegant intro</Text>
-			</View>
-			<View style={styles.slide4}>
-				<Text style={styles.text}>We hope that you enjoy your day</Text>
-			</View>
-    </Swiper>
+	  <View style={styles.container}>
+		<Text style={styles.text}>Choose inpainting algorithm</Text>
+		<Picker
+		  selectedValue={selectedValue}
+		  style={styles.picker}
+		  onValueChange={setPickerValue}>
+		  <Picker.Item label="OpenCV Telea (default)" value={InpaintingAlgorithm.TELEA} />
+		  <Picker.Item label="OpenCV Navier-Stokes" value={InpaintingAlgorithm.NS} />
+		  <Picker.Item label="LaMa (long)" value={InpaintingAlgorithm.LAMA} />
+		  <Picker.Item label="Generative inpainting" value={InpaintingAlgorithm.GAN} />
+		</Picker>
+	  </View>
 	);
-
 }
-
-const styless = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	title: {
-		fontSize: 20,
-		fontWeight: 'bold',
-	},
-	separator: {
-		marginVertical: 30,
-		height: 1,
-		width: '80%',
-	},
-});
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	wrapper: {},
-	slide1: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'red'
-	},
-	slide2: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'orange'
-	},
-	slide3: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'lightblue'
-	},
-	slide4: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'blue'
-	},
-	slide5: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'lightgreen'
-	},
-	image: {
-		width: 50,
-		height: 50,
-		margin: 20
+		backgroundColor: '#222',
 	},
 	text: {
 		color: '#fff',
-		fontSize: 30,
-		fontWeight: 'bold'
-	}
+		fontSize: 20,
+		marginTop: 20,
+	},
+	picker: {
+		backgroundColor: '#fff',
+		height: 50,
+		width: '100%',
+	},
 });

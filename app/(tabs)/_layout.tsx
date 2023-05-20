@@ -1,14 +1,11 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
-import { View } from '../../components/default-components/Themed';
-
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Tabs } from 'expo-router';
 import { useLayoutEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, useColorScheme } from 'react-native';
+import { View } from '../../components/default-components/Themed';
 import Colors from '../../constants/Colors';
-import { getImage, postPicture, setMasks } from '../../services/image-service';
-import { ActivityIndicator } from 'react-native';
+import { getImage, getInpaintingAlgorithm, postPicture, setMasks } from '../../services/image-service';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -31,7 +28,7 @@ export default function TabLayout() {
   }, [navigation]);
 
   const loadMasks = () => {
-    postPicture(getImage()).then((response) => {
+    postPicture(getImage(), getInpaintingAlgorithm()).then((response) => {
       setMasks(response.data["masks"]);
       navigation.navigate('upload', { headerTitle: 'Masks' });
     });

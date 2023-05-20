@@ -1,13 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, Platform, StyleSheet } from 'react-native';
-
-import EditScreenInfo from '../components/default-components/EditScreenInfo';
-import { Text, View } from '../components/default-components/Themed';
-import { djangoUrl, getImage } from '../services/image-service';
-import { NavigationProp, useLinkProps, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
+import { Image, StyleSheet } from 'react-native';
+import { View } from '../components/default-components/Themed';
 import { getChosenMask } from '../services/dot-service';
-
+import { djangoUrl, getInpaintingAlgorithm } from '../services/image-service';
+import { getAntiCaching } from '../components/camera/PointChooser';
 
 export default function ViewScreen() {  
   const navigation = useNavigation<NavigationProp<RootParamList>>();
@@ -17,10 +14,15 @@ export default function ViewScreen() {
     chosenMask = getChosenMask();
   }, []);
   
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log(djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&inpainting=' + getInpaintingAlgorithm() + '&' + getAntiCaching());
+    });
+  });
   
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{uri: djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&' + new Date()}}/>
+      <Image style={styles.image} source={{uri: djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&inpainting=' + getInpaintingAlgorithm() + '&' + getAntiCaching()}}/>
     </View>
   );
 }

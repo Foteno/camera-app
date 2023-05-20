@@ -1,8 +1,14 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
+import { View } from '../../components/default-components/Themed';
 
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useLayoutEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
+import { getImage, postPicture, setMasks } from '../../services/image-service';
+import { ActivityIndicator } from 'react-native';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -16,40 +22,55 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const navigation = useNavigation<NavigationProp<RootParamList>>();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (<View style={{backgroundColor: 'transparent'}}></View>)
+    });
+  }, [navigation]);
+
+  const loadMasks = () => {
+    postPicture(getImage()).then((response) => {
+      setMasks(response.data["masks"]);
+      navigation.navigate('upload', { headerTitle: 'Masks' });
+    });
+  }
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
+        
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Camera',
+            tabBarIcon: ({ color }) => <TabBarIcon name="camera" color={color} />,
+            headerRight: () => (
+              <Pressable onPress={() => loadMasks()} style={{ marginRight: 15 }}>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
+                    <FontAwesome size={25} name="upload" style={[styles.maskButton, { opacity: pressed ? 0.5 : 1 }]}></FontAwesome>
                 )}
               </Pressable>
-            </Link>
-          ),
-        }}
-      />
+            ),
+            unmountOnBlur: true,
+          }}
+        />
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  maskButton: {
+    color: 'white',
+  }
+});

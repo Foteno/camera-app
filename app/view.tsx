@@ -16,13 +16,13 @@ export default function ViewScreen() {
   
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log(djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&inpainting=' + getInpaintingAlgorithm() + '&' + getAntiCaching());
+      console.log(djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&inpainting=' + getInpaintingAlgorithm() + '&' + new Date());
     });
   });
   
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{uri: djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&inpainting=' + getInpaintingAlgorithm() + '&' + getAntiCaching()}}/>
+      <Image style={styles.image} source={{uri: djangoUrl + "/choose-mask?mask_file=" + chosenMask + '&inpainting=' + getInpaintingAlgorithm() + '&' + new Date()}}/>
     </View>
   );
 }
